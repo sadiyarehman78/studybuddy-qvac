@@ -19,138 +19,65 @@ The application uses the QVAC SDK to load a local Llama 3.2 1B model and generat
 - 🎨 Responsive modern interface
 - 🚫 No separate cloud AI API key required
 
-## 🏗️ Architecture
+## Installation
 
-```text
-                    ┌──────────────────────┐
-                    │   StudyBuddy UI      │
-                    │ HTML / CSS / JS      │
-                    └──────────┬───────────┘
-                               │
-                               ▼
-                    ┌──────────────────────┐
-                    │     Node Server      │
-                    │      server.js       │
-                    └──────────┬───────────┘
-                               │
-                               ▼
-                    ┌──────────────────────┐
-                    │    @qvac/sdk         │
-                    │                      │
-                    │    loadModel()       │
-                    │    completion()      │
-                    └──────────┬───────────┘
-                               │
-                               ▼
-                    ┌──────────────────────┐
-                    │   Llama 3.2 1B       │
-                    │   Local GGUF Model   │
-                    └──────────┬───────────┘
-                               │
-                               ▼
-                    ┌──────────────────────┐
-                    │   AI Response        │
-                    │   streamed to UI     │
-                    └──────────────────────┘<<<<<<< HEAD
-\# StudyBuddy Local AI 📚
+### Requirements
 
+- Node.js 18+
+- npm
+- Git
+- Internet connection for the first model download
 
+### Setup
 
-A simple on-device AI study assistant powered by the \*\*Tether QVAC JavaScript SDK\*\*.
+Clone the repository:
 
+```bash
+git clone https://github.com/sadiyarehman78/studybuddy-qvac.git
+cd studybuddy-qvac Install dependencies:
 
+npm install
 
-StudyBuddy Local AI uses the QVAC SDK to download and run a local Large Language Model directly on the user's computer. It generates study explanations without requiring a cloud-based AI API.
+Set the QVAC configuration path.
 
+Windows PowerShell:
 
+$env:QVAC_CONFIG_PATH = ".\qvac.config.json"
 
-\---
+Start the application:
 
+npm start
 
+Open:
 
-\## 🚀 Features
+http://localhost:3000
+
+The first run downloads and caches the local Llama model through QVAC.
+
+Usage
+
+Enter any study-related question in the chat interface.
+
+Examples:
+
+Explain TCP vs UDP
+Write a Java program to reverse a string
+Explain machine learning simply
+
+Click Stop while a response is generating to stop the current response.
 
 
+And your **Features** section can simply be:
 
-\- Runs AI inference locally on the device
+```markdown
+## Features
 
-\- Uses the official `@qvac/sdk` JavaScript package
+- Local AI inference with QVAC
+- Llama 3.2 1B model
+- Interactive chat UI
+- Streaming responses
+- Stop generation
+- Programming and study assistance
+- No separate cloud AI API key required
 
-\- Loads the Llama 3.2 1B Instruct model
-
-\- Generates explanations for computer science topics
-
-\- Uses streaming AI responses
-
-\- Does not require an OpenAI API key
-
-\- Automatically unloads the model after completion
-
-\- Designed as a lightweight local AI learning assistant
-
-
-
-\---
-
-
-
-\## 🧠 How It Works
-
-
-
-The application follows this process:
-
-
-
-1\. Initialize the QVAC SDK.
-
-2\. Download the selected AI model if it is not already available.
-
-3\. Load the model into memory.
-
-4\. Send a study-related prompt to the model.
-
-5\. Generate the response locally.
-
-6\. Display the generated response in the terminal.
-
-7\. Unload the model and close the QVAC runtime.
-
-
-
-\### Application Flow
-
-
-
-```text
-
-User Prompt
-
-&#x20;   ↓
-
-QVAC SDK Initialization
-
-&#x20;   ↓
-
-Load Llama 3.2 1B Model
-
-&#x20;   ↓
-
-Local AI Inference
-
-&#x20;   ↓
-
-Streaming Response
-
-&#x20;   ↓
-
-Display Explanation
-
-&#x20;   ↓
-
-Unload Model
-
-=======
-# studubuddy-ai
-an ai to study offline
->>>>>>> 5c7e4c8c7464f7447c359a04c886175cc2930614
+That's it. Don't make the README a 10-page essay. Reviewers should be able to clone → install → run → test in under a minute.
