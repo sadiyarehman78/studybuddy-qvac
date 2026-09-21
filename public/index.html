@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>StudyBuddy — Local AI Study Assistant</title>
+
+  <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+
+  <div class="app">
+
+    <aside class="sidebar">
+
+      <div class="brand">
+        <div class="brand-icon">✦</div>
+
+        <div>
+          <h1>StudyBuddy</h1>
+          <span>Local AI</span>
+        </div>
+      </div>
+
+      <button class="new-chat" id="newChat">
+        + New conversation
+      </button>
+
+      <div class="sidebar-section">
+        <span class="section-title">Study tools</span>
+
+        <button class="side-item">📚 Study Help</button>
+        <button class="side-item">💻 Programming</button>
+        <button class="side-item">🧠 Concepts</button>
+      </div>
+
+      <div class="sidebar-bottom">
+
+        <div class="local-status">
+          <span class="status-dot"></span>
+
+          <div>
+            <strong>Local AI</strong>
+            <small>Powered by QVAC</small>
+          </div>
+        </div>
+
+      </div>
+
+    </aside>
+
+
+    <main class="main">
+
+      <header class="topbar">
+
+        <div>
+          <span class="eyebrow">YOUR PERSONAL STUDY PARTNER</span>
+          <h2>Learn anything. Ask anything.</h2>
+        </div>
+
+        <div class="model-badge">
+          <span class="status-dot"></span>
+          Llama 3.2 1B · Local
+        </div>
+
+      </header>
+
+
+      <section class="chat-area" id="chatArea">
+
+        <div class="welcome" id="welcome">
+
+          <div class="hero-icon">
+            ✦
+          </div>
+
+          <h3>What are you learning today?</h3>
+
+          <p>
+            Ask StudyBuddy a question and get an answer
+            generated locally on your device.
+          </p>
+
+          <div class="suggestions">
+
+            <button
+              class="suggestion"
+              data-question="Explain artificial intelligence in simple words with a real-world example."
+            >
+              <span>🧠</span>
+              <div>
+                <strong>Explain AI</strong>
+                <small>Simple explanation</small>
+              </div>
+            </button>
+
+            <button
+              class="suggestion"
+              data-question="Explain TCP and UDP and give me their key differences."
+            >
+              <span>🌐</span>
+              <div>
+                <strong>Computer Networks</strong>
+                <small>TCP vs UDP</small>
+              </div>
+            </button>
+
+            <button
+              class="suggestion"
+              data-question="Write a Java program to check whether a number is prime and explain it."
+            >
+              <span>💻</span>
+              <div>
+                <strong>Java Help</strong>
+                <small>Code + explanation</small>
+              </div>
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <div class="composer-wrapper">
+
+        <form class="composer" id="chatForm">
+
+          <textarea
+            id="question"
+            placeholder="Ask StudyBuddy anything..."
+            rows="1"
+          ></textarea>
+
+          <button
+            type="submit"
+            id="sendButton"
+            aria-label="Send"
+          >
+            ↑
+          </button>
+
+        </form>
+
+        <div class="composer-note">
+          🔒 Your AI inference runs locally with QVAC
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="/app.js"></script>
+
+</body>
+
+</html>
