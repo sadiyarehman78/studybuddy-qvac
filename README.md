@@ -1,4 +1,57 @@
-<<<<<<< HEAD
+# StudyBuddy Local AI
+
+> A local AI study assistant powered by the Tether QVAC JavaScript SDK.
+
+StudyBuddy is an on-device AI study assistant that lets students ask questions and receive AI-generated explanations, programming help, and computer-science guidance through a simple web interface.
+
+The application uses the QVAC SDK to load a local Llama 3.2 1B model and generate responses directly through local inference.
+
+## ✨ Features
+
+- 🤖 Local AI inference with QVAC
+- 💬 Interactive chat interface
+- ⚡ Streaming AI responses
+- 📚 Study and concept explanations
+- 💻 Programming assistance
+- 🌐 Computer-science question answering
+- 🔒 Local model inference
+- 🧠 Llama 3.2 1B model
+- 🎨 Responsive modern interface
+- 🚫 No separate cloud AI API key required
+
+## 🏗️ Architecture
+
+```text
+                    ┌──────────────────────┐
+                    │   StudyBuddy UI      │
+                    │ HTML / CSS / JS      │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │     Node Server      │
+                    │      server.js       │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │    @qvac/sdk         │
+                    │                      │
+                    │    loadModel()       │
+                    │    completion()      │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │   Llama 3.2 1B       │
+                    │   Local GGUF Model   │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │   AI Response        │
+                    │   streamed to UI     │
+                    └──────────────────────┘<<<<<<< HEAD
 \# StudyBuddy Local AI 📚
 
 
