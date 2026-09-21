@@ -4,6 +4,9 @@ const questionInput = document.getElementById("question");
 const sendButton = document.getElementById("sendButton");
 const newChatButton = document.getElementById("newChat");
 
+let controller = null;
+let isGenerating = false;
+
 function removeWelcome() {
   const welcome = document.getElementById("welcome");
 
@@ -13,22 +16,16 @@ function removeWelcome() {
 }
 
 function addMessage(text, type) {
-
   const message = document.createElement("div");
 
   message.className = `message ${type}-message`;
 
   const avatar = document.createElement("div");
-
   avatar.className = "message-avatar";
-
-  avatar.textContent =
-    type === "user" ? "You" : "✦";
+  avatar.textContent = type === "user" ? "You" : "✦";
 
   const content = document.createElement("div");
-
   content.className = "message-content";
-
   content.textContent = text;
 
   message.appendChild(avatar);
@@ -41,9 +38,37 @@ function addMessage(text, type) {
   return content;
 }
 
+function setGenerating(state) {
+  isGenerating = state;
+
+  if (state) {
+    // Arrow becomes Stop
+    sendButton.textContent = "■";
+    sendButton.classList.add("stop-button");
+    sendButton.setAttribute("aria-label", "Stop generating");
+  } else {
+    // Stop becomes Arrow
+    sendButton.textContent = "↑";
+    sendButton.classList.remove("stop-button");
+    sendButton.setAttribute("aria-label", "Send");
+  }
+}
+
+function stopGenerating() {
+  if (controller) {
+    controller.abort();
+    controller = null;
+  }
+
+  setGenerating(false);
+
+  questionInput.disabled = false;
+  sendButton.disabled = false;
+
+  questionInput.focus();
+}
 
 async function askStudyBuddy(question) {
-
   removeWelcome();
 
   addMessage(question, "user");
@@ -53,13 +78,14 @@ async function askStudyBuddy(question) {
     "ai"
   );
 
-  sendButton.disabled = true;
+  controller = new AbortController();
+
+  setGenerating(true);
+
   questionInput.disabled = true;
 
   try {
-
     const response = await fetch("/api/chat", {
-
       method: "POST",
 
       headers: {
@@ -68,8 +94,9 @@ async function askStudyBuddy(question) {
 
       body: JSON.stringify({
         question
-      })
+      }),
 
+      signal: controller.signal
     });
 
     if (!response.ok) {
@@ -78,40 +105,41 @@ async function askStudyBuddy(question) {
 
     answerElement.textContent = "";
 
-    const reader =
-      response.body.getReader();
+    const reader = response.body.getReader();
 
-    const decoder =
-      new TextDecoder();
+    const decoder = new TextDecoder();
 
     while (true) {
-
-      const { value, done } =
-        await reader.read();
+      const { value, done } = await reader.read();
 
       if (done) break;
 
-      const chunk =
-        decoder.decode(value, {
-          stream: true
-        });
+      const chunk = decoder.decode(value, {
+        stream: true
+      });
 
       answerElement.textContent += chunk;
 
-      chatArea.scrollTop =
-        chatArea.scrollHeight;
+      chatArea.scrollTop = chatArea.scrollHeight;
     }
 
   } catch (error) {
 
-    answerElement.textContent =
-      "Sorry, something went wrong. Please try again.";
+    if (error.name === "AbortError") {
+      // User intentionally stopped generation.
+      answerElement.textContent += "\n\n[Generation stopped]";
+    } else {
+      console.error(error);
 
-    console.error(error);
+      answerElement.textContent =
+        "Sorry, something went wrong. Please try again.";
+    }
 
   } finally {
+    controller = null;
 
-    sendButton.disabled = false;
+    setGenerating(false);
+
     questionInput.disabled = false;
 
     questionInput.focus();
@@ -119,63 +147,52 @@ async function askStudyBuddy(question) {
 }
 
 
-chatForm.addEventListener(
-  "submit",
-  async event => {
+chatForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
 
+  // If AI is generating, the arrow/stop button stops it.
+  if (isGenerating) {
+    stopGenerating();
+    return;
+  }
+
+  const question = questionInput.value.trim();
+
+  if (!question) return;
+
+  questionInput.value = "";
+
+  await askStudyBuddy(question);
+});
+
+
+questionInput.addEventListener("keydown", (event) => {
+  if (
+    event.key === "Enter" &&
+    !event.shiftKey
+  ) {
     event.preventDefault();
 
-    const question =
-      questionInput.value.trim();
-
-    if (!question) return;
-
-    questionInput.value = "";
-
-    await askStudyBuddy(question);
+    chatForm.requestSubmit();
   }
-);
-
-
-questionInput.addEventListener(
-  "keydown",
-  event => {
-
-    if (
-      event.key === "Enter" &&
-      !event.shiftKey
-    ) {
-
-      event.preventDefault();
-
-      chatForm.requestSubmit();
-    }
-  }
-);
+});
 
 
 document
   .querySelectorAll(".suggestion")
-  .forEach(button => {
+  .forEach((button) => {
+    button.addEventListener("click", () => {
+      const question = button.dataset.question;
 
-    button.addEventListener(
-      "click",
-      () => {
-
-        const question =
-          button.dataset.question;
-
-        askStudyBuddy(question);
-      }
-    );
+      askStudyBuddy(question);
+    });
   });
 
 
-newChatButton.addEventListener(
-  "click",
-  () => {
-
-    window.location.reload();
-
+newChatButton.addEventListener("click", () => {
+  if (isGenerating) {
+    stopGenerating();
   }
-);
+
+  window.location.reload();
+});
